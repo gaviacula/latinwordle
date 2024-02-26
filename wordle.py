@@ -1,4 +1,5 @@
-import random, re
+import random, re, sys, pickle
+
 from colorama import Fore, Style, Back
 
 def normalize(aword):
@@ -98,7 +99,7 @@ class Wordle:
         if not len(astr)==self.wlength:
             return False
         if self.ffl:
-            return bool(self.ffl.get(astr) or astr.upper() in self.bagofwords)
+            return bool(self.ffl.lookUp(astr) or astr.upper() in self.bagofwords)
         else:
             return (astr.upper() in self.bagofwords)
             
@@ -116,5 +117,24 @@ class Wordle:
         print ("\t\t"+" ".join(alphab[:11]))
         print ("\t\t"+" ".join(alphab[11:]))
         print (f"{Style.RESET_ALL}")
+        
+        
+if __name__ == "__main__":
+    
+    defaultLength=5
+    defaultWdict="wordlewords.latin"
+    defaultFullFormName="ffl2.pickle"
+    
+    for arg in sys.argv[1:]:
+        try:
+            defaultLength=int(arg)
+        except:
+            pass
+    
+    wdict=pickle.load(open(defaultWdict, "rb"))
+    ffl=pickle.load(open(defaultFullFormName, "rb"))
+    w=Wordle(wdict, defaultLength, ffl)
+    w.play()
+    
         
         
